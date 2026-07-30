@@ -108,7 +108,7 @@ const App = {
             case 'kitchen':   content = Pages.kitchen(); break;
             case 'recipe':    content = Pages.recipe(App.state.pageData.recipeId); break;
             case 'interview': content = Pages.interview(); break;
-            case 'interview-detail': content = Pages.interviewDetail(App.state.pageData.categoryId); break;
+            case 'interview-detail': content = Pages.interviewDetail(App.state.pageData.scriptId); break;
             default:          content = Pages.home();
         }
 
@@ -228,6 +228,16 @@ const App = {
             } else {
                 App.util.toast('浏览器不支持语音播放');
             }
+        },
+
+        // 渲染荧光笔高亮
+        renderHighlight(text) {
+            if (!text) return '';
+            // 转义HTML
+            let html = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            // 替换 {{highlight}}内容{{/highlight}} 为 <mark>内容</mark>
+            html = html.replace(/\{\{highlight\}\}/g, '<mark class="highlight">').replace(/\{\{\/highlight\}\}/g, '</mark>');
+            return html;
         },
     },
 };
@@ -620,44 +630,24 @@ const Pages = {
         if (isJiaozong) {
             modules = (window.knowledgePoints || []).filter(k => k.module === '教育学' || k.module === '心理学');
         } else {
-            modules = (window.knowledgePoints || []).filter(k => k.module === '中学英语');
-            // 如果没有中学英语知识点，显示通用内容
-            if (modules.length === 0) {
-                modules = [{
-                    module: '中学英语',
-                    chapter: '学科知识体系',
-                    sections: [{
-                        title: '考试内容概览',
-                        points: [
-                            { term: '中学英语教学内容', content: '英语语言知识（语音、词汇、语法、语篇、语用）、文化知识、英语语言技能（理解性技能和书面表达性技能）。' },
-                            { term: '高等教育对应内容', content: '综合英语（专业四级水平）、写作基础、翻译技巧、英美概况、英美文学、英语语言学。' },
-                            { term: '课程与教学论', content: '《义务教育英语课程标准(2022年版)》、《普通高中英语课程标准(2017年版2020年修订)》、教学方法（听说法、交际法、任务型教学法等）、教学设计与评析。' },
-                        ]
-                    }, {
-                        title: '语法重点',
-                        points: [
-                            { term: '时态与语态', content: '掌握英语16种时态的构成与用法，重点掌握一般现在时、一般过去时、一般将来时、现在进行时、现在完成时等；掌握被动语态的构成与使用场景。' },
-                            { term: '从句', content: '名词性从句（主语从句、宾语从句、表语从句、同位语从句）、定语从句（限制性与非限制性）、状语从句（时间、原因、条件、让步、目的、结果等）。' },
-                            { term: '非谓语动词', content: '不定式、动名词、分词的构成与功能，作主语、宾语、表语、定语、状语等。' },
-                            { term: '虚拟语气', content: 'if条件句中的虚拟语气（与现在/过去/将来事实相反）、wish后的虚拟语气、建议类动词后的虚拟语气等。' },
-                        ]
-                    }, {
-                        title: '教学论重点',
-                        points: [
-                            { term: '核心素养', content: '英语学科核心素养包括语言能力、文化意识、思维品质和学习能力四个方面。' },
-                            { term: '英语学习活动观', content: '基于六要素整合的英语学习活动观，通过学习理解、应用实践、迁移创新三个层次设计教学活动。' },
-                            { term: '教学方法', content: '听说法、交际法、语篇教学法、翻译法、认知法、任务型教学法等的特点与适用场景。' },
-                        ]
-                    }]
-                }];
-            }
+            modules = window.englishKnowledge || [];
         }
+
+        const totalPoints = modules.reduce((s, m) => s + m.sections.reduce((ss, sec) => ss + sec.points.length, 0), 0);
 
         return `
         <div class="page">
             <div class="back-bar">
                 <button class="back-btn">‹</button>
                 <span class="back-title">${title}知识点</span>
+            </div>
+
+            <div class="card" style="background:linear-gradient(135deg,${isJiaozong ? '#4A90D9,#5BA3E8' : '#F5A623,#FF8C42'});color:white;">
+                <div style="font-size:13px;line-height:1.8;">
+                    <strong>📚 ${title}</strong><br>
+                    共 ${modules.length} 章 · ${totalPoints} 个知识点<br>
+                    <span style="opacity:0.8;font-size:12px;">黄色高亮为重点内容，点击章节展开学习</span>
+                </div>
             </div>
 
             <div class="section-title"><span class="emoji">📋</span> 知识体系</div>
@@ -677,7 +667,7 @@ const Pages = {
                                 ${s.points.map(p => `
                                     <div class="knowledge-point">
                                         <div class="knowledge-point-term">${p.term}</div>
-                                        <div class="knowledge-point-content">${p.content}</div>
+                                        <div class="knowledge-point-content">${App.util.renderHighlight(p.content)}</div>
                                     </div>
                                 `).join('')}
                             </div>
@@ -687,7 +677,7 @@ const Pages = {
             `).join('')}
 
             <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--text-tertiary);">
-                点击章节标题展开/收起知识点
+                点击章节标题展开/收起知识点 · 高亮内容为考试重点
             </div>
         </div>
         `;
@@ -1285,36 +1275,50 @@ const Pages = {
 
     // ----- 面试口语 -----
     interview() {
-        const categories = window.interviewExpressions || [];
+        const scripts = window.interviewScripts || [];
+
+        // 按课型分组
+        const typeGroups = {};
+        scripts.forEach(s => {
+            if (!typeGroups[s.lessonType]) typeGroups[s.lessonType] = [];
+            typeGroups[s.lessonType].push(s);
+        });
 
         return `
         <div class="page">
             <div class="page-header">
                 <div class="page-title">🎤 面试口语</div>
-                <div class="page-subtitle">福建教招面试 · 英语片段教学表达</div>
+                <div class="page-subtitle">福建教招面试 · 英语片段教学完整逐字稿</div>
             </div>
 
             <div class="card" style="background:linear-gradient(135deg,#9B59B6,#8E44AD);color:white;">
                 <div style="font-size:13px;line-height:1.8;">
-                    <strong>📋 什么是片段教学？</strong><br>
-                    片段教学是福建教招面试的核心环节，考生需在10-15分钟内全英文模拟课堂教学。掌握各环节的标准表达，是面试成功的关键。
+                    <strong>📋 片段教学逐字稿</strong><br>
+                    共 ${scripts.length} 篇完整试讲稿，覆盖词汇、阅读、语法、听说、写作、语音等课型。每篇均可直接背诵，点击查看全文。
                 </div>
             </div>
 
-            <div class="section-title"><span class="emoji">📚</span> 教学环节表达</div>
-            <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">按教学环节分类，点击查看完整表达，可朗读背诵</p>
+            <div class="section-title"><span class="emoji">📝</span> 试讲逐字稿</div>
+            <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">按课型分类，点击进入查看完整逐字稿</p>
 
-            ${categories.map(cat => `
-                <div class="interview-category-card" onclick="App.navigate('interview-detail', {categoryId: ${cat.id}})">
-                    <div class="category-icon">${cat.icon}</div>
-                    <div class="category-info">
-                        <div class="category-name">${cat.category}</div>
-                        <div class="category-name-en">${cat.categoryEn}</div>
-                        <div class="category-desc">${cat.description}</div>
-                        <div class="category-count">${cat.expressions.length} 条表达</div>
+            ${Object.entries(typeGroups).map(([type, items]) => `
+                <div class="interview-type-header">${type}</div>
+                ${items.map(s => `
+                    <div class="script-card" onclick="App.navigate('interview-detail', {scriptId: ${s.id}})">
+                        <div class="script-card-top">
+                            <span class="script-type-badge">${s.lessonType}</span>
+                            <span class="tag ${s.difficulty === '初级' ? 'tag-easy' : s.difficulty === '中级' ? 'tag-medium' : 'tag-hard'}">${s.difficulty}</span>
+                        </div>
+                        <div class="script-card-title">${s.icon} ${s.titleCn}</div>
+                        <div class="script-card-title-en">${s.title}</div>
+                        <div class="script-card-desc">${s.description}</div>
+                        <div class="script-card-meta">
+                            <span>⏱ ${s.duration}</span>
+                            <span>📖 ${s.script.length} 个环节</span>
+                            <span>🏷️ ${s.keywords.slice(0,2).join(' · ')}</span>
+                        </div>
                     </div>
-                    <div class="category-arrow">›</div>
-                </div>
+                `).join('')}
             `).join('')}
 
             <div class="section-title mt-16"><span class="emoji">💡</span> 面试小贴士</div>
@@ -1332,40 +1336,62 @@ const Pages = {
         `;
     },
 
-    // ----- 面试口语详情 -----
-    interviewDetail(categoryId) {
-        const cat = (window.interviewExpressions || []).find(c => c.id === categoryId);
-        if (!cat) return '<div class="page"><p>分类不存在</p></div>';
+    // ----- 面试逐字稿详情 -----
+    interviewDetail(scriptId) {
+        const script = (window.interviewScripts || []).find(s => s.id === scriptId);
+        if (!script) return '<div class="page"><p>逐字稿不存在</p></div>';
 
         return `
         <div class="page">
             <div class="back-bar">
                 <button class="back-btn">‹</button>
-                <span class="back-title">${cat.icon} ${cat.category}</span>
+                <span class="back-title">${script.lessonType}</span>
             </div>
 
-            <div class="interview-detail-header">
-                <div class="big-icon">${cat.icon}</div>
-                <h2>${cat.category}</h2>
-                <div class="en-title">${cat.categoryEn}</div>
-                <div class="desc">${cat.description}</div>
+            <div class="script-detail-header">
+                <div class="script-type-badge-large">${script.lessonType}</div>
+                <h2>${script.icon} ${script.titleCn}</h2>
+                <div class="script-title-en">${script.title}</div>
+                <div class="script-detail-meta">
+                    <span class="tag ${script.difficulty === '初级' ? 'tag-easy' : script.difficulty === '中级' ? 'tag-medium' : 'tag-hard'}">${script.difficulty}</span>
+                    <span>⏱ ${script.duration}</span>
+                </div>
+                <div class="script-detail-desc">${script.description}</div>
+                <div class="script-keywords">
+                    ${script.keywords.map(k => `<span class="script-keyword">#${k}</span>`).join('')}
+                </div>
             </div>
 
-            <div class="section-title"><span class="emoji">💬</span> 常用表达</div>
-            ${cat.expressions.map((exp, i) => `
-                <div class="expression-card">
-                    <div class="expression-num">${i + 1}</div>
-                    <div class="expression-content">
-                        <div class="expression-en">${exp.en}</div>
-                        <div class="expression-cn">${exp.cn}</div>
-                        <div class="expression-tip">💡 ${exp.tip}</div>
-                        <div class="expression-play" onclick="App.util.speak('${exp.en.replace(/'/g, "\\'")}')">🔊 朗读</div>
+            <div style="margin-bottom:12px;">
+                <button class="checkin-btn" onclick="App.actions.speakScript(${script.id})" style="background:linear-gradient(135deg,#9B59B6,#8E44AD);">
+                    🔊 朗读全文
+                </button>
+            </div>
+
+            <div class="section-title"><span class="emoji">📝</span> 完整逐字稿</div>
+            ${script.script.map((part, i) => `
+                <div class="script-stage-card">
+                    <div class="script-stage-header">
+                        <span class="script-stage-num">${i + 1}</span>
+                        <div>
+                            <div class="script-stage-name">${part.stageCn}</div>
+                            <div class="script-stage-en">${part.stage}</div>
+                        </div>
+                        <button class="script-stage-play" onclick="App.util.speak(${JSON.stringify(part.text).replace(/'/g, "&#39;")})">🔊</button>
                     </div>
+                    <div class="script-stage-text">${part.text.replace(/\n/g, '<br>')}</div>
                 </div>
             `).join('')}
 
+            ${script.tips ? `
+            <div class="tips-box">
+                <span class="tips-label">💡 使用建议</span>
+                ${script.tips}
+            </div>
+            ` : ''}
+
             <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--text-tertiary);">
-                点击 🔊 朗读按钮可听发音，跟着练习背诵
+                可点击每个环节的 🔊 单独朗读 · 也可点击顶部朗读全文
             </div>
         </div>
         `;
@@ -2010,6 +2036,15 @@ App.actions = {
     clearIngredients() {
         App.state.kitchenSelected = [];
         App.render();
+    },
+
+    // 面试：朗读完整逐字稿
+    speakScript(scriptId) {
+        const script = (window.interviewScripts || []).find(s => s.id === scriptId);
+        if (!script) return;
+        const fullText = script.script.map(p => p.text).join(' ');
+        App.util.speak(fullText);
+        App.util.toast('🔊 开始朗读，请跟读练习');
     },
 };
 

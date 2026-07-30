@@ -1681,6 +1681,214 @@ html, body {
     gap: 2px;
 }
 
+/* ===== 荧光笔高亮 ===== */
+mark.highlight {
+    background: linear-gradient(transparent 40%, #FFF176 40%);
+    padding: 0 2px;
+    border-radius: 2px;
+    color: inherit;
+    font-weight: 500;
+}
+
+/* ===== 面试逐字稿 ===== */
+.interview-type-header {
+    font-size: 14px;
+    font-weight: 700;
+    color: #8E44AD;
+    margin: 16px 0 8px;
+    padding-left: 4px;
+    border-left: 3px solid #9B59B6;
+}
+
+.script-card {
+    background: var(--bg-white);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.script-card:active {
+    transform: scale(0.98);
+}
+
+.script-card-top {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.script-type-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #F3E5F5;
+    color: #8E44AD;
+    font-weight: 600;
+}
+
+.script-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.script-card-title-en {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-bottom: 4px;
+    font-style: italic;
+}
+
+.script-card-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 6px;
+}
+
+.script-card-meta {
+    display: flex;
+    gap: 10px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    flex-wrap: wrap;
+}
+
+.script-detail-header {
+    background: var(--bg-white);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.script-type-badge-large {
+    display: inline-block;
+    font-size: 13px;
+    padding: 4px 14px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #9B59B6, #8E44AD);
+    color: white;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.script-detail-header h2 {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.script-title-en {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    font-style: italic;
+    margin-bottom: 8px;
+}
+
+.script-detail-meta {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.script-detail-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.script-keywords {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.script-keyword {
+    font-size: 11px;
+    color: #8E44AD;
+    background: #F3E5F5;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.script-stage-card {
+    background: var(--bg-white);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+}
+
+.script-stage-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.script-stage-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #9B59B6, #8E44AD);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.script-stage-name {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.script-stage-en {
+    font-size: 11px;
+    color: var(--text-tertiary);
+}
+
+.script-stage-play {
+    margin-left: auto;
+    border: none;
+    background: #F3E5F5;
+    color: #8E44AD;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.script-stage-play:active {
+    opacity: 0.7;
+}
+
+.script-stage-text {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+}
+
 /* ===== 响应式 ===== */
 @media (min-width: 481px) {
     #app {
