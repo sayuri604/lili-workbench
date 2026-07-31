@@ -307,36 +307,28 @@ const Pages = {
             </div>
             <div class="xhs-drawer-menu">
                 <div class="xhs-menu-item active" onclick="App.util.closeDrawer()">
-                    <span class="xhs-menu-icon">📅</span>
-                    <span class="xhs-menu-text">每日计划</span>
+                    <span class="xhs-menu-icon">🏠</span>
+                    <span class="xhs-menu-text">首页</span>
                 </div>
                 <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('oral')">
-                    <span class="xhs-menu-icon">💡</span>
-                    <span class="xhs-menu-text">口语每日灵感</span>
-                </div>
-                <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('interview')">
-                    <span class="xhs-menu-icon">🔥</span>
-                    <span class="xhs-menu-text">面试片段逐字稿</span>
+                    <span class="xhs-menu-icon">🗣️</span>
+                    <span class="xhs-menu-text">英语口语</span>
                 </div>
                 <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('exam')">
-                    <span class="xhs-menu-icon">📊</span>
-                    <span class="xhs-menu-text">考编内容复盘</span>
+                    <span class="xhs-menu-icon">📚</span>
+                    <span class="xhs-menu-text">教师考编</span>
                 </div>
-                <div class="xhs-menu-item" onclick="App.util.closeDrawer()">
-                    <span class="xhs-menu-icon">📝</span>
-                    <span class="xhs-menu-text">备忘录</span>
-                </div>
-                <div class="xhs-menu-item" onclick="App.util.closeDrawer()">
-                    <span class="xhs-menu-icon">🎻</span>
-                    <span class="xhs-menu-text">小提琴练习</span>
-                </div>
-                <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('oral')">
-                    <span class="xhs-menu-icon">🌍</span>
-                    <span class="xhs-menu-text">英语学习</span>
+                <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('interview')">
+                    <span class="xhs-menu-icon">🎤</span>
+                    <span class="xhs-menu-text">面试口语</span>
                 </div>
                 <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('kitchen')">
                     <span class="xhs-menu-icon">🍳</span>
                     <span class="xhs-menu-text">小厨娘</span>
+                </div>
+                <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('wrong')">
+                    <span class="xhs-menu-icon">❌</span>
+                    <span class="xhs-menu-text">错题复习</span>
                 </div>
                 <div class="xhs-menu-item" onclick="App.util.toggleUserName()">
                     <span class="xhs-menu-icon">⚙️</span>
