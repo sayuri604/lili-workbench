@@ -45,6 +45,8 @@ const App = {
                     App.state.wrongQuestions = data.wrongQuestions || [];
                     App.state.practiceAnswers = data.practiceAnswers || {};
                 }
+                const uname = localStorage.getItem('lili-user-name');
+                if (uname) App.state.userName = uname;
             } catch(e) { console.warn('加载存储失败', e); }
         },
         save() {
@@ -94,7 +96,7 @@ const App = {
         let showNav = true;
 
         switch(page) {
-            case 'home':      content = Pages.home(); break;
+            case 'home':      content = Pages.home(); showNav = false; break;
             case 'oral':      content = Pages.oral(); break;
             case 'oral-scene': content = Pages.oralScene(App.state.pageData.sceneId); break;
             case 'ai-chat':   content = Pages.aiChat(App.state.pageData.sceneId); showNav = false; break;
@@ -239,6 +241,48 @@ const App = {
             html = html.replace(/\{\{highlight\}\}/g, '<mark class="highlight">').replace(/\{\{\/highlight\}\}/g, '</mark>');
             return html;
         },
+
+        // 打开小红书风格侧边栏
+        openDrawer() {
+            const drawer = document.getElementById('xhsDrawer');
+            const mask = document.getElementById('xhsDrawerMask');
+            if (drawer) drawer.classList.add('open');
+            if (mask) mask.classList.add('open');
+        },
+
+        // 关闭侧边栏
+        closeDrawer() {
+            const drawer = document.getElementById('xhsDrawer');
+            const mask = document.getElementById('xhsDrawerMask');
+            if (drawer) drawer.classList.remove('open');
+            if (mask) mask.classList.remove('open');
+        },
+
+        // 显示日期字符串（中文）
+        todayStr() {
+            const d = new Date();
+            const y = d.getFullYear();
+            const m = d.getMonth() + 1;
+            const day = d.getDate();
+            const weeks = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+            return `${y}年${m}月${day}日 ${weeks[d.getDay()]}`;
+        },
+
+        // 修改用户名（设置入口）
+        toggleUserName() {
+            App.util.closeDrawer();
+            const current = App.state.userName || '理理';
+            const name = prompt('设置你的昵称（用于首页显示）', current);
+            if (name && name.trim()) {
+                App.state.userName = name.trim().substring(0, 8);
+                try { localStorage.setItem('lili-user-name', App.state.userName); } catch(e) {}
+                App.util.toast('✓ 已保存');
+                App.render();
+            }
+        },
+
+        // showToast 别名
+        showToast(msg) { App.util.toast(msg); },
     },
 };
 
@@ -250,84 +294,185 @@ const Pages = {
         const totalCheckin = App.state.checkinDays.length;
         const todayChecked = App.state.checkinDays.includes(App.util.today());
         const wrongCount = App.state.wrongQuestions.length;
+        const userName = App.state.userName || '理理';
 
         return `
-        <div class="page">
-            <div class="home-hero">
-                <h1>👋 理理工作台</h1>
-                <p>英语口语 × 教师考编 | 每天进步一点点</p>
+        <!-- 左侧抽屉式侧边栏 -->
+        <div class="xhs-drawer" id="xhsDrawer">
+            <div class="xhs-drawer-header">
+                <div class="xhs-avatar">${userName.charAt(0)}</div>
+                <div class="xhs-user-name">${userName}</div>
+                <div class="xhs-user-bio">创作工作台</div>
+                <button class="xhs-drawer-close" onclick="App.util.closeDrawer()">✕</button>
+            </div>
+            <div class="xhs-drawer-menu">
+                <div class="xhs-menu-item active" onclick="App.util.closeDrawer()">
+                    <span class="xhs-menu-icon">📅</span>
+                    <span class="xhs-menu-text">每日计划</span>
+                </div>
+                <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('oral')">
+                    <span class="xhs-menu-icon">💡</span>
+                    <span class="xhs-menu-text">口语每日灵感</span>
+                </div>
+                <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('interview')">
+                    <span class="xhs-menu-icon">🔥</span>
+                    <span class="xhs-menu-text">面试片段逐字稿</span>
+                </div>
+                <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('exam')">
+                    <span class="xhs-menu-icon">📊</span>
+                    <span class="xhs-menu-text">考编内容复盘</span>
+                </div>
+                <div class="xhs-menu-item" onclick="App.util.closeDrawer()">
+                    <span class="xhs-menu-icon">📝</span>
+                    <span class="xhs-menu-text">备忘录</span>
+                </div>
+                <div class="xhs-menu-item" onclick="App.util.closeDrawer()">
+                    <span class="xhs-menu-icon">🎻</span>
+                    <span class="xhs-menu-text">小提琴练习</span>
+                </div>
+                <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('oral')">
+                    <span class="xhs-menu-icon">🌍</span>
+                    <span class="xhs-menu-text">英语学习</span>
+                </div>
+                <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('kitchen')">
+                    <span class="xhs-menu-icon">🍳</span>
+                    <span class="xhs-menu-text">小厨娘</span>
+                </div>
+                <div class="xhs-menu-item" onclick="App.util.toggleUserName()">
+                    <span class="xhs-menu-icon">⚙️</span>
+                    <span class="xhs-menu-text">设置</span>
+                </div>
+            </div>
+        </div>
+        <div class="xhs-drawer-mask" id="xhsDrawerMask" onclick="App.util.closeDrawer()"></div>
+
+        <div class="page xhs-page">
+            <!-- 顶部状态栏占位 + 头像触发器 -->
+            <div class="xhs-top-bar">
+                <button class="xhs-avatar-btn" onclick="App.util.openDrawer()">${userName.charAt(0)}</button>
+                <div class="xhs-top-title">
+                    <span class="xhs-top-greeting">${App.util.todayStr()}</span>
+                </div>
+                <button class="xhs-top-icon-btn" onclick="App.util.toast('搜索功能即将上线')">🔍</button>
             </div>
 
-            <div class="home-stats">
-                <div class="stat-card">
-                    <div class="stat-icon">🔥</div>
-                    <div class="stat-value">${streak}</div>
-                    <div class="stat-label">连续打卡</div>
+            <!-- 同步状态卡 -->
+            <div class="xhs-sync-card">
+                <div class="xhs-sync-text">
+                    <div class="xhs-sync-title">📲 同步到手机</div>
+                    <div class="xhs-sync-desc">完成一项打卡，进度一目了然</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">📅</div>
-                    <div class="stat-value">${totalCheckin}</div>
-                    <div class="stat-label">累计打卡</div>
+                <button class="xhs-sync-btn" onclick="App.actions.checkin()">
+                    🔄 同步
+                </button>
+            </div>
+
+            <!-- 今日计划 -->
+            <div class="xhs-today-plan">
+                <div class="xhs-plan-header">
+                    <span class="xhs-plan-icon">📋</span>
+                    <span class="xhs-plan-title">今日计划</span>
+                    <span class="xhs-plan-count">${todayChecked ? '✓ 已打卡' : '0/3'}</span>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">📝</div>
-                    <div class="stat-value">${wrongCount}</div>
-                    <div class="stat-label">待复习错题</div>
+                <div class="xhs-plan-items">
+                    <div class="xhs-plan-item ${todayChecked ? 'done' : ''}" onclick="App.switchTab('oral')">
+                        <span class="xhs-plan-check">${todayChecked ? '✅' : '⬜'}</span>
+                        <span class="xhs-plan-text">英语口语打卡</span>
+                    </div>
+                    <div class="xhs-plan-item" onclick="App.switchTab('exam')">
+                        <span class="xhs-plan-check">⬜</span>
+                        <span class="xhs-plan-text">教综知识点 ×3</span>
+                    </div>
+                    <div class="xhs-plan-item" onclick="App.switchTab('interview')">
+                        <span class="xhs-plan-check">⬜</span>
+                        <span class="xhs-plan-text">面试逐字稿练习</span>
+                    </div>
                 </div>
             </div>
 
-            ${todayChecked ? '' : `
-            <div class="checkin-section">
-                <div class="checkin-header">
-                    <span class="checkin-title">📋 今日打卡</span>
+            <!-- 学习入口（大图卡片） -->
+            <div class="xhs-section-title">⚡ 学习入口</div>
+            <div class="xhs-feed">
+                <div class="xhs-feed-card" onclick="App.switchTab('oral')">
+                    <div class="xhs-feed-cover xhs-cover-oral">
+                        <div class="xhs-feed-cover-emoji">🗣️</div>
+                        <div class="xhs-feed-cover-overlay">情景对话 · AI练习 · 每日打卡</div>
+                    </div>
+                    <div class="xhs-feed-body">
+                        <div class="xhs-feed-title">英语口语</div>
+                        <div class="xhs-feed-desc">${totalCheckin}次打卡 · 连续${streak}天</div>
+                        <div class="xhs-feed-meta">
+                            <span class="xhs-tag tag-blue">口语</span>
+                            <span class="xhs-tag tag-green">AI陪练</span>
+                        </div>
+                    </div>
                 </div>
-                <button class="checkin-btn" onclick="App.actions.checkin()">立即打卡</button>
-            </div>
-            `}
 
-            <div class="section-title"><span class="emoji">📖</span> 学习入口</div>
-            <div class="feature-grid">
-                <div class="feature-card oral" onclick="App.switchTab('oral')">
-                    <div class="feature-icon">🗣️</div>
-                    <div class="feature-name">英语口语</div>
-                    <div class="feature-desc">情景对话 · AI练习 · 每日打卡</div>
+                <div class="xhs-feed-card" onclick="App.switchTab('exam')">
+                    <div class="xhs-feed-cover xhs-cover-exam">
+                        <div class="xhs-feed-cover-emoji">📚</div>
+                        <div class="xhs-feed-cover-overlay">教综 · 中英 · 福建考编</div>
+                    </div>
+                    <div class="xhs-feed-body">
+                        <div class="xhs-feed-title">教师考编</div>
+                        <div class="xhs-feed-desc">${wrongCount > 0 ? `${wrongCount}道错题待复习` : '今日开始刷题吧'}</div>
+                        <div class="xhs-feed-meta">
+                            <span class="xhs-tag tag-purple">教综</span>
+                            <span class="xhs-tag tag-orange">中英</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="feature-card exam" onclick="App.switchTab('exam')">
-                    <div class="feature-icon">📚</div>
-                    <div class="feature-name">教师考编</div>
-                    <div class="feature-desc">教综 · 中英 · 真题 · 模拟</div>
+
+                <div class="xhs-feed-card" onclick="App.switchTab('interview')">
+                    <div class="xhs-feed-cover xhs-cover-interview">
+                        <div class="xhs-feed-cover-emoji">🎤</div>
+                        <div class="xhs-feed-cover-overlay">片段教学逐字稿 · 8篇课型</div>
+                    </div>
+                    <div class="xhs-feed-body">
+                        <div class="xhs-feed-title">面试口语</div>
+                        <div class="xhs-feed-desc">词汇·阅读·语法·听说·写作·语音</div>
+                        <div class="xhs-feed-meta">
+                            <span class="xhs-tag tag-pink">逐字稿</span>
+                            <span class="xhs-tag tag-blue">分阶段朗读</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="feature-card" onclick="App.switchTab('interview')" style="border-top:3px solid #9B59B6;">
-                    <div class="feature-icon">🎤</div>
-                    <div class="feature-name">面试口语</div>
-                    <div class="feature-desc">片段教学 · 课堂用语 · 背诵</div>
-                </div>
-                <div class="feature-card" onclick="App.switchTab('kitchen')" style="border-top:3px solid #E67E22;">
-                    <div class="feature-icon">🍳</div>
-                    <div class="feature-name">小厨娘</div>
-                    <div class="feature-desc">食材选菜 · 家常菜谱 · 小白友好</div>
+
+                <div class="xhs-feed-card" onclick="App.switchTab('kitchen')">
+                    <div class="xhs-feed-cover xhs-cover-kitchen">
+                        <div class="xhs-feed-cover-emoji">🍳</div>
+                        <div class="xhs-feed-cover-overlay">食材选菜 · 80道家常菜</div>
+                    </div>
+                    <div class="xhs-feed-body">
+                        <div class="xhs-feed-title">小厨娘</div>
+                        <div class="xhs-feed-desc">冰箱里有什么，今天就做什么</div>
+                        <div class="xhs-feed-meta">
+                            <span class="xhs-tag tag-green">小白友好</span>
+                            <span class="xhs-tag tag-orange">详细步骤</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="section-title"><span class="emoji">⚡</span> 快捷操作</div>
-            <div class="card" onclick="App.navigate('ai-chat')" style="cursor:pointer;display:flex;align-items:center;gap:12px;">
-                <div style="font-size:28px;">🤖</div>
-                <div style="flex:1;">
-                    <div style="font-weight:600;font-size:14px;">AI 英语对话</div>
-                    <div style="font-size:12px;color:var(--text-secondary);">选择场景，和AI练习口语</div>
+            <!-- 底部数据 -->
+            <div class="xhs-stats-bar">
+                <div class="xhs-stat">
+                    <div class="xhs-stat-num">${streak}</div>
+                    <div class="xhs-stat-label">连续打卡</div>
                 </div>
-                <div style="color:var(--text-tertiary);">›</div>
-            </div>
-            <div class="card" onclick="App.switchTab('wrong')" style="cursor:pointer;display:flex;align-items:center;gap:12px;">
-                <div style="font-size:28px;">❌</div>
-                <div style="flex:1;">
-                    <div style="font-weight:600;font-size:14px;">错题复习</div>
-                    <div style="font-size:12px;color:var(--text-secondary);">${wrongCount > 0 ? `有${wrongCount}道错题待复习` : '暂无错题'}</div>
+                <div class="xhs-stat-divider"></div>
+                <div class="xhs-stat">
+                    <div class="xhs-stat-num">${totalCheckin}</div>
+                    <div class="xhs-stat-label">累计打卡</div>
                 </div>
-                <div style="color:var(--text-tertiary);">›</div>
+                <div class="xhs-stat-divider"></div>
+                <div class="xhs-stat">
+                    <div class="xhs-stat-num">${wrongCount}</div>
+                    <div class="xhs-stat-label">错题</div>
+                </div>
             </div>
 
-            <div style="text-align:center;margin-top:24px;font-size:11px;color:var(--text-tertiary);">
+            <div class="xhs-footer">
                 理理工作台 · 专为福建教师考编打造
             </div>
         </div>
