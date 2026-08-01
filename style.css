@@ -2282,3 +2282,275 @@ mark.highlight {
     font-size: 11px;
     color: #aaa;
 }
+
+/* ===== Todo 待办清单 ===== */
+.todo-progress-card {
+    margin: 12px 16px;
+    padding: 16px;
+    background: linear-gradient(135deg, #2d4a2b 0%, #4a6741 100%);
+    color: #fff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(45, 74, 43, 0.2);
+}
+.todo-progress-info { flex: 1; }
+.todo-progress-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+.todo-progress-sub {
+    font-size: 12px;
+    opacity: 0.85;
+}
+.todo-progress-ring {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgba(255,255,255,0.3);
+}
+.todo-progress-percent {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.todo-progress-bar {
+    margin: 0 16px 16px;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+.todo-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4a6741, #6b8e5e);
+    border-radius: 3px;
+    transition: width 0.3s;
+}
+
+.todo-duration-section {
+    margin: 0 16px 16px;
+}
+.todo-duration-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2d4a2b;
+    margin-bottom: 8px;
+}
+.todo-duration-options {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.todo-duration-btn {
+    flex-shrink: 0;
+    padding: 8px 18px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.todo-duration-btn.active {
+    background: #2d4a2b;
+    color: #fff;
+    border-color: #2d4a2b;
+}
+
+.todo-task-list {
+    margin: 0 16px;
+}
+.todo-task-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 12px;
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid #f0f0f0;
+}
+.todo-task-item:active { transform: scale(0.98); }
+.todo-task-item.done {
+    background: #f8faf7;
+    opacity: 0.7;
+}
+.todo-task-check {
+    font-size: 22px;
+    margin-right: 12px;
+}
+.todo-task-content { flex: 1; }
+.todo-task-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 2px;
+}
+.todo-task-item.done .todo-task-title {
+    text-decoration: line-through;
+    color: #999;
+}
+.todo-task-meta {
+    font-size: 11px;
+    color: #999;
+}
+.todo-task-num {
+    font-size: 12px;
+    color: #ccc;
+    font-weight: 600;
+}
+
+/* ===== 刷题模式卡片 ===== */
+.practice-mode-card {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px;
+    margin: 0 16px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid #f0f0f0;
+    gap: 12px;
+}
+.practice-mode-card:active { transform: scale(0.98); }
+.practice-mode-card.sat-card {
+    border-left: 3px solid #F5A623;
+}
+.practice-mode-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+}
+.practice-mode-body { flex: 1; }
+.practice-mode-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 2px;
+}
+.practice-mode-desc {
+    font-size: 12px;
+    color: #999;
+}
+.practice-mode-arrow {
+    color: #ccc;
+    font-size: 20px;
+}
+
+/* ===== 章节选择 ===== */
+.chapter-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: #fff;
+    margin: 0 16px 6px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid #f0f0f0;
+    font-size: 14px;
+}
+.chapter-item:active { background: #f8f8f8; }
+.chapter-name { color: #333; }
+.chapter-arrow { color: #ccc; }
+
+/* ===== 周六提示 ===== */
+.sat-notice {
+    margin: 0 16px 16px;
+    padding: 12px;
+    background: #FFF5E6;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #E09611;
+    text-align: center;
+    border: 1px dashed #F5A623;
+}
+
+/* ===== 搜索页 ===== */
+.search-box {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px 16px;
+}
+.search-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 14px;
+    outline: none;
+    background: #fff;
+}
+.search-input:focus {
+    border-color: var(--primary);
+}
+.search-btn {
+    padding: 10px 18px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.search-results {
+    padding: 0 16px;
+}
+.search-tip {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+}
+.search-tip-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+.search-tip-text {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 4px;
+}
+.search-tip-desc {
+    font-size: 12px;
+    color: #aaa;
+}
+.search-count {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 10px;
+}
+.search-result-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    border: 1px solid #f0f0f0;
+}
+.search-result-card:active { background: #f8f8f8; }
+.search-result-meta {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+.tag-gray {
+    background: #f0f0f0 !important;
+    color: #999 !important;
+}
+.search-result-text {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.5;
+}

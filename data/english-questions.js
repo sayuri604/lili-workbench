@@ -741,6 +741,51 @@ const englishQuestions = [
     options: null,
     answer: "教学设计：\n\n一、教学目标（基于核心素养四维度）：\n1. 语言能力目标：能够运用略读策略获取文章主旨，运用寻读策略查找文化差异的具体表现；能用英语简要复述文章内容，就文化差异话题表达个人观点。\n2. 文化意识目标：了解中外文化差异（如课堂互动方式、社交礼仪、饮食文化等），增强跨文化理解和包容意识，坚定文化自信。\n3. 思维品质目标：分析文化差异产生的原因，评价文中人物应对文化差异的方式，提出自己面对文化差异时的策略。\n4. 学习能力目标：运用预测、略读、寻读等阅读策略，自主建构知识导图梳理文章信息。\n\n二、教学过程：\nStep 1 Pre-reading (8 min): \n① 激活背景：展示留学图片，提问\"What would you do if you studied abroad?\"激活学生已有知识；② 预测内容：根据标题和插图预测文章内容；③ 词汇预热：呈现关键词（culture shock, adapt, custom等）。\nStep 2 While-reading (20 min):\n① Fast reading (skimming): 快速阅读，获取文章主旨（main idea）和结构；② Detailed reading (scanning): 细读各段，完成信息表格（文化差异的方面、具体表现、学生感受）；③ Critical thinking: 小组讨论\"Why did the student experience culture shock? How did she deal with it?\"\nStep 3 Post-reading (12 min):\n① 复述：学生根据信息表格复述文章内容；② 迁移创新：小组讨论\"If you were to study abroad, how would you deal with cultural differences?\"并完成mini-presentation；③ 文化对比：对比中外文化差异，讨论如何增强文化自信和跨文化交际能力。\nStep 4 Summary & Homework (5 min):\n总结本课所学；作业：写一篇短文\"My Plan for Studying Abroad\"，运用本课所学金句和文化知识。\n\n三、设计理据：\n① 依据新课标核心素养理念，教学目标涵盖四维度；② 依据PWP（Pre-reading, While-reading, Post-reading）阅读教学模式，分阶段设计活动；③ 阅读策略由浅入深（skimming→scanning→critical thinking），体现思维层次递进；④ Post-reading设计迁移创新活动，促使学生将所学知识迁移到新情境，培养高阶思维和跨文化交际能力；⑤ 采用任务型教学和合作学习，以学生为主体，教师为促进者。",
     analysis: "教学设计题需体现新课标理念，目标涵盖核心素养四维度，过程采用PWP模式，活动设计体现层次性和递进性，读写结合，注重思维品质和文化意识培养。"
+  },
+  // ========== 补充教学设计题（覆盖阅读/听说/写作/语法课型） ==========
+  {
+    id: 66,
+    type: "case",
+    module: "课程标准与教学论",
+    chapter: "教学设计",
+    difficulty: "较难",
+    question: "Design a 45-minute listening and speaking lesson plan for Junior Grade 2 students. The topic is \"Shopping\". The listening material is a dialogue between a customer and a shop assistant in a clothes store.\n\nRequirements: (1) Write the teaching objectives based on the core competencies. (2) Design the main teaching procedures (pre-listening, while-listening, post-listening). (3) Briefly explain the design rationale.",
+    options: null,
+    answer: "教学设计：\n\n一、教学目标（基于核心素养四维度）：\n1. 语言能力目标：能够听懂购物对话并获取关键信息（商品、价格、尺码、颜色）；能运用\"Can I help you? / How much is it? / I'll take it.\"等功能句进行购物交际。\n2. 文化意识目标：了解中西方购物文化的异同（如讨价还价习惯、礼貌用语）。\n3. 思维品质目标：能根据对话信息推理判断，分析购物场景中的交际策略。\n4. 学习能力目标：能运用预测、抓取关键词等听力策略提高听力效率。\n\n二、教学过程：\nStep 1 Pre-listening (8 min):\n① 情境导入：播放商场购物短视频，提问\"What can you see? Where are they?\"激活背景知识；② 词汇铺垫：呈现关键词（size, color, price, discount, try on）；③ 预测内容：根据图片预测对话内容。\nStep 2 While-listening (20 min):\n① Extensive listening: 听第一遍，回答\"What does the customer want to buy?\"获取主旨；② Intensive listening: 听第二遍，完成表格（Item, Color, Size, Price）；③ 听第三遍，关注功能句\"Can I help you? / How much is it? / Can I try it on?\"并跟读模仿语音语调。\nStep 3 Post-listening (12 min):\n① 角色扮演：两人一组，模拟购物场景对话（提供语言支架和图片提示）；② 拓展任务：创设新场景（如买鞋、买文具），小组创编新对话并展示；③ 评价：生生互评（流利度、语言准确性、交际得体性）。\nStep 4 Summary & Homework (5 min):\n总结购物功能句；作业：录制一段购物对话视频。\n\n三、设计理据：\n① 采用PWP听力教学模式，由泛听到精听，层次递进；② 听说结合，以听促说，输入输出并重；③ 任务型教学，角色扮演和创编对话激发学生兴趣，培养交际能力；④ 提供语言支架降低难度，体现i+1理论。",
+    analysis: "听说课设计应遵循输入（听）→输出（说）的认知规律，采用PWP模式，听说结合，以听促说，注重交际策略培养。"
+  },
+  {
+    id: 67,
+    type: "case",
+    module: "课程标准与教学论",
+    chapter: "教学设计",
+    difficulty: "较难",
+    question: "Design a 45-minute writing lesson plan for Senior Grade 1 students. The topic is \"An Introduction to My Hometown\". Students will write a descriptive composition of 120-150 words.\n\nRequirements: (1) Write the teaching objectives based on the core competencies. (2) Design the main teaching procedures based on the Process Writing Approach. (3) Briefly explain the design rationale.",
+    options: null,
+    answer: "教学设计：\n\n一、教学目标（基于核心素养四维度）：\n1. 语言能力目标：能运用方位词、描写性形容词和There be句型描述家乡的地理位置和特色；能写一篇120-150词的家乡介绍短文，结构清晰。\n2. 文化意识目标：增强对家乡文化的认同感和自豪感，能用英语传播家乡文化。\n3. 思维品质目标：能梳理家乡的特色要素（地理、文化、美食、人情），有逻辑地组织文章结构。\n4. 学习能力目标：能运用过程写作法的五阶段完成写作任务，能进行自评和互评。\n\n二、教学过程（过程写作法）：\nStep 1 Pre-writing (10 min):\n① 头脑风暴：\"What makes your hometown special?\"学生列出家乡特色关键词（location, food, culture, people, scenery）；② 范文分析：阅读范文，分析结构（总—分—总）和语言特色；③ 搭建支架：提供句型库（It is located in... / It is famous for... / The people there are...）；④ 列提纲：学生列写作提纲。\nStep 2 Drafting (10 min):\n学生根据提纲和语言支架独立写初稿，教师巡回指导，重点关注结构和内容。\nStep 3 Revising (10 min):\n① 同伴互评：交换初稿，使用评价量表（内容是否完整、结构是否清晰、语言是否准确）给出建议；② 根据反馈修改初稿。\nStep 4 Editing (8 min):\n关注语言准确性（拼写、语法、标点），使用检查清单自检。\nStep 5 Publishing & Sharing (5 min):\n展示优秀作品，学生朗读自己的家乡介绍，班级评选\"最美家乡\"。\nStep 6 Homework：\n完善终稿，配上家乡图片，制作成电子小报。\n\n三、设计理据：\n① 采用过程写作法五阶段（写前-起草-修改-编辑-发表），体现写作的过程性；② 评价方式多元（自评、互评、师评），关注写作过程；③ 提供语言支架和评价量表，降低写作难度；④ 写作主题贴近学生生活，激发表达欲望，培养文化意识。",
+    analysis: "写作课设计应采用过程写作法，强调写作的循环反复过程，提供充分的语言支架和评价支持，注重思维逻辑和文化意识的培养。"
+  },
+  {
+    id: 68,
+    type: "case",
+    module: "课程标准与教学论",
+    chapter: "教学设计",
+    difficulty: "较难",
+    question: "Design a 45-minute grammar lesson plan for Junior Grade 3 students. The grammar focus is the Present Perfect Tense (have/has done). \n\nRequirements: (1) Write the teaching objectives based on the core competencies. (2) Design the main teaching procedures (presentation, practice, production). (3) Briefly explain the design rationale.",
+    options: null,
+    answer: "教学设计：\n\n一、教学目标（基于核心素养四维度）：\n1. 语言能力目标：能理解现在完成时的含义（过去发生对现在有影响）和结构（have/has + 过去分词）；能正确运用现在完成时描述已完成的经历和动作。\n2. 文化意识目标：通过交流个人经历，增进同学间的了解。\n3. 思维品质目标：能辨析现在完成时与一般过去时的区别，培养分析和归纳能力。\n4. 学习能力目标：能在真实语境中自主归纳语法规则，运用语法知识解决交际任务。\n\n二、教学过程（PPP模式）：\nStep 1 Presentation (12 min):\n① 情境创设：展示人物经历图片\"I have been to Beijing. / She has eaten sushi.\"；② 观察归纳：引导学生观察例句，归纳现在完成时的结构（have/has + V-ed）和含义；③ 对比辨析：对比\"I went to Beijing last year.\"与\"I have been to Beijing.\"，理解两时态差异；④ 教师精讲：过去分词的构成规则（规则/不规则）。\nStep 2 Practice (15 min):\n① 机械练习：将动词变为过去分词（write→written, go→gone...）；② 句型转换：将一般过去时改写为现在完成时；③ 控制性交际：用现在完成时完成句子\"I have _____, but I haven't _____.\"\nStep 3 Production (13 min):\n① Find someone who...活动：学生手持表格\"Find someone who has been to Shanghai / has read Harry Potter / has eaten frog...\"，用\"Have you ever...?\"采访同学；② 汇报：\"Li Ming has been to Shanghai, but he hasn't read Harry Potter.\"；③ 拓展：小组分享\"My Unforgettable Experience\"，运用现在完成时。\nStep 4 Summary & Homework (5 min):\n总结现在完成时的结构和用法；作业：写一段\"Things I have done this year\"，至少用5个现在完成时句子。\n\n三、设计理据：\n① 采用PPP（Presentation-Practice-Production）语法教学模式，由认知到运用；② 语法教学采用归纳法，学生在真实语境中观察归纳规则；③ 练习设计由机械到交际，层次递进；④ Production环节设计信息差活动，激发交际需求，体现语法为交际服务的理念。",
+    analysis: "语法课设计应采用PPP模式，注重形式-意义-使用的统一，练习由控制到自由，在真实语境中培养语法运用能力。"
+  },
+  {
+    id: 69,
+    type: "case",
+    module: "课程标准与教学论",
+    chapter: "教学设计",
+    difficulty: "较难",
+    question: "Design a 45-minute reading lesson plan for Senior Grade 2 students. The text is an argumentative essay about whether teenagers should be allowed to use smartphones at school. \n\nRequirements: (1) Write the teaching objectives based on the core competencies. (2) Design the main teaching procedures (pre-reading, while-reading, post-reading). (3) Briefly explain the design rationale.",
+    options: null,
+    answer: "教学设计：\n\n一、教学目标（基于核心素养四维度）：\n1. 语言能力目标：能理解议论文的论点、论据和结论结构；能运用\"I think... / In my opinion... / However... / Therefore...\"等表达观点和论证。\n2. 文化意识目标：了解校园手机使用的不同文化态度，形成理性的科技使用观。\n3. 思维品质目标：能批判性分析正反两方面论据，形成自己独立的判断，培养批判性思维。\n4. 学习能力目标：能运用略读、寻读、思维导图等策略梳理议论文结构。\n\n二、教学过程：\nStep 1 Pre-reading (8 min):\n① 情境导入：展示校园手机使用图片，提问\"Should students use smartphones at school? Why or why not?\"激活背景；② 表态站队：学生就话题表态（赞成/反对），激发阅读期待；③ 预测：根据标题预测作者观点。\nStep 2 While-reading (20 min):\n① Skimming: 快速阅读，判断作者观点（赞成/反对/中立）；② Scanning: 细读，完成论证结构图（论点—论据1—论据2—论据3—结论）；③ Critical reading: 分析论据的充分性和逻辑性，标记最有说服力的论据；④ 语言聚焦：圈画论证性连接词（however, furthermore, in addition, therefore）。\nStep 3 Post-reading (12 min):\n① 辩论活动：正反两方就\"Should smartphones be allowed at school?\"展开辩论，运用文章论据和自己的观点；② 写作迁移：写一篇120词短文\"My Opinion on Using Smartphones at School\"，运用所学问证结构和连接词；③ 分享评价：学生展示短文，生生互评（论点是否清晰、论据是否充分、连接词使用是否恰当）。\nStep 4 Summary & Homework (5 min):\n总结议论文结构和论证语言；作业：完善短文，调查他国校园手机政策。\n\n三、设计理据：\n① 依据PWP阅读模式，由整体到细节到批判，层次递进；② 话题贴近学生生活，激发表达和思辨欲望；③ Post-reading设计辩论和写作迁移，培养批判性思维和表达能力，读写结合；④ 关注议论文语篇特征（论证结构、连接词），体现语篇类型教学理念。",
+    analysis: "议论文阅读课设计应关注语篇结构和论证逻辑，Post-reading环节设计辩论和写作迁移，培养批判性思维和高阶思维能力。"
   }
 ];
 
