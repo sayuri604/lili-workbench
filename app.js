@@ -1,6 +1,6 @@
 /**
  * 理理工作台 - 应用主逻辑（重构版）
- * 功能：Todo待办 + 教综刷题 + 中英刷题 + 错题本 + 搜索
+ * 功能：Todo待办 + 教综刷题 + 中英刷题 + 错题本
  */
 
 // ===== 全局状态管理 =====
@@ -27,10 +27,6 @@ const App = {
 
         // 错题本
         wrongQuestions: [],
-
-        // 搜索
-        searchKeyword: '',
-        searchResults: [],
     },
 
     // ===== 本地存储 =====
@@ -96,53 +92,22 @@ const App = {
         const page = App.state.currentPage;
 
         let content = '';
-        let showNav = true;
 
         switch(page) {
-            case 'home':          content = Pages.todo(); showNav = false; break;
+            case 'home':          content = Pages.todo(); break;
             case 'jiaozong':      content = Pages.jiaozongHome(); break;
             case 'english':       content = Pages.englishHome(); break;
             case 'wrong':         content = Pages.wrong(); break;
-            case 'search':        content = Pages.search(); break;
             case 'jz-practice':   content = Pages.jzPractice(App.state.pageData); break;
             case 'en-practice':   content = Pages.enPractice(App.state.pageData); break;
             case 'knowledge':     content = Pages.knowledge(App.state.pageData.subject); break;
-            case 'mock-test':     content = Pages.mockTest(); showNav = false; break;
-            case 'mock-result':   content = Pages.mockResult(); showNav = false; break;
+            case 'mock-test':     content = Pages.mockTest(); break;
+            case 'mock-result':   content = Pages.mockResult(); break;
             case 'jz-chapters':   content = Pages.jzChapters(); break;
-            default:              content = Pages.todo(); showNav = false;
+            default:              content = Pages.todo();
         }
 
         app.innerHTML = content;
-
-        // 底部导航
-        if (showNav) {
-            const nav = document.createElement('div');
-            nav.className = 'bottom-nav';
-            nav.innerHTML = `
-                <div class="nav-item ${page === 'home' ? 'active' : ''}" data-tab="home">
-                    <span class="nav-icon">🏠</span>
-                    <span class="nav-label">首页</span>
-                </div>
-                <div class="nav-item ${page === 'jiaozong' ? 'active' : ''}" data-tab="jiaozong">
-                    <span class="nav-icon">📖</span>
-                    <span class="nav-label">教综</span>
-                </div>
-                <div class="nav-item ${page === 'english' ? 'active' : ''}" data-tab="english">
-                    <span class="nav-icon">🅰️</span>
-                    <span class="nav-label">中英</span>
-                </div>
-                <div class="nav-item ${page === 'wrong' ? 'active' : ''}" data-tab="wrong">
-                    <span class="nav-icon">❌</span>
-                    <span class="nav-label">错题</span>
-                </div>
-                <div class="nav-item ${page === 'search' ? 'active' : ''}" data-tab="search">
-                    <span class="nav-icon">🔍</span>
-                    <span class="nav-label">搜索</span>
-                </div>
-            `;
-            app.appendChild(nav);
-        }
 
         App.bindEvents();
     },
@@ -152,10 +117,6 @@ const App = {
         // 返回按钮
         document.querySelectorAll('.back-btn').forEach(btn => {
             btn.onclick = () => App.back();
-        });
-        // 底部导航
-        document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
-            item.onclick = () => App.switchTab(item.dataset.tab);
         });
         // 页面事件
         const page = App.state.currentPage;
@@ -322,14 +283,15 @@ App.actions = {
     },
 
     pickReviewChapter() {
-        const recent = (App.state.jzReviewHistory || []).slice(-5);
-        const candidates = JZ_CHAPTERS.filter(c => !recent.includes(c));
-        const pool = candidates.length > 0 ? candidates : JZ_CHAPTERS;
-        const picked = pool[Math.floor(Math.random() * pool.length)];
+        // 按章节顺序轮换，不随机
+        const history = App.state.jzReviewHistory || [];
+        const lastIdx = history.length > 0 ? JZ_CHAPTERS.indexOf(history[history.length - 1]) : -1;
+        const nextIdx = (lastIdx + 1) % JZ_CHAPTERS.length;
+        const picked = JZ_CHAPTERS[nextIdx];
         if (!App.state.jzReviewHistory) App.state.jzReviewHistory = [];
         App.state.jzReviewHistory.push(picked);
-        if (App.state.jzReviewHistory.length > 20) {
-            App.state.jzReviewHistory = App.state.jzReviewHistory.slice(-20);
+        if (App.state.jzReviewHistory.length > 22) {
+            App.state.jzReviewHistory = App.state.jzReviewHistory.slice(-22);
         }
         return picked;
     },
@@ -533,33 +495,7 @@ App.actions = {
         if (arrow) arrow.classList.toggle('open');
     },
 
-    // ----- 搜索 -----
-    searchQuestions(keyword) {
-        const kw = keyword.trim().toLowerCase();
-        if (!kw) { App.state.searchResults = []; App.render(); return; }
-        const all = [...(window.jiaozongQuestions || []), ...(window.englishQuestions || [])];
-        const results = all.filter(q =>
-            (q.question && q.question.toLowerCase().includes(kw)) ||
-            (q.chapter && q.chapter.toLowerCase().includes(kw)) ||
-            (q.module && q.module.toLowerCase().includes(kw)) ||
-            (q.analysis && q.analysis.toLowerCase().includes(kw))
-        );
-        // 去重
-        const seen = new Set();
-        App.state.searchResults = results.filter(q => {
-            const key = `${q.module}-${q.id}`;
-            if (seen.has(key)) return false;
-            seen.add(key);
-            return true;
-        });
-        App.state.searchKeyword = keyword;
-        App.render();
-        // 恢复输入框内容
-        setTimeout(() => {
-            const input = document.getElementById('searchInput');
-            if (input) input.value = keyword;
-        }, 0);
-    },
+    // ----- 搜索（已删除） -----
 };
 
 // ===== 页面模板 =====
@@ -598,9 +534,6 @@ const Pages = {
                 <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('wrong')">
                     <span class="xhs-menu-icon">❌</span><span class="xhs-menu-text">错题复习</span>
                 </div>
-                <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('search')">
-                    <span class="xhs-menu-icon">🔍</span><span class="xhs-menu-text">搜索题目</span>
-                </div>
                 <div class="xhs-menu-item" onclick="App.util.toggleUserName()">
                     <span class="xhs-menu-icon">⚙️</span><span class="xhs-menu-text">设置</span>
                 </div>
@@ -614,7 +547,7 @@ const Pages = {
                 <div class="xhs-top-title">
                     <span class="xhs-top-greeting">${App.util.todayStr()}</span>
                 </div>
-                <button class="xhs-top-icon-btn" onclick="App.switchTab('search')">🔍</button>
+                <button class="xhs-top-icon-btn" onclick="App.util.openDrawer()">☰</button>
             </div>
 
             <!-- 进度卡 -->
@@ -701,24 +634,6 @@ const Pages = {
                 <div class="practice-mode-body">
                     <div class="practice-mode-title">混合刷题</div>
                     <div class="practice-mode-desc">全章节随机抽题 · 30题/次</div>
-                </div>
-                <div class="practice-mode-arrow">›</div>
-            </div>
-
-            <div class="section-title"><span class="emoji">📚</span> 学习工具</div>
-            <div class="practice-mode-card" onclick="App.navigate('knowledge', { subject: 'jiaozong' })">
-                <div class="practice-mode-icon">📖</div>
-                <div class="practice-mode-body">
-                    <div class="practice-mode-title">知识点梳理</div>
-                    <div class="practice-mode-desc">教育学+心理学 · 22章 · 荧光笔重点</div>
-                </div>
-                <div class="practice-mode-arrow">›</div>
-            </div>
-            <div class="practice-mode-card" onclick="App.switchTab('wrong')">
-                <div class="practice-mode-icon">❌</div>
-                <div class="practice-mode-body">
-                    <div class="practice-mode-title">错题本</div>
-                    <div class="practice-mode-desc">${wrongCount > 0 ? `${wrongCount}道错题待复习` : '暂无错题'}</div>
                 </div>
                 <div class="practice-mode-arrow">›</div>
             </div>
@@ -818,24 +733,6 @@ const Pages = {
                 📅 周六将额外刷新翻译、案例分析、教学设计各1题
             </div>
             `}
-
-            <div class="section-title"><span class="emoji">📚</span> 学习工具</div>
-            <div class="practice-mode-card" onclick="App.navigate('knowledge', { subject: 'english' })">
-                <div class="practice-mode-icon">📖</div>
-                <div class="practice-mode-body">
-                    <div class="practice-mode-title">知识点梳理</div>
-                    <div class="practice-mode-desc">语法/词汇/文学/语言学/教学论 · 荧光笔重点</div>
-                </div>
-                <div class="practice-mode-arrow">›</div>
-            </div>
-            <div class="practice-mode-card" onclick="App.switchTab('wrong')">
-                <div class="practice-mode-icon">❌</div>
-                <div class="practice-mode-body">
-                    <div class="practice-mode-title">错题本</div>
-                    <div class="practice-mode-desc">${wrongCount > 0 ? `${wrongCount}道错题待复习` : '暂无错题'}</div>
-                </div>
-                <div class="practice-mode-arrow">›</div>
-            </div>
         </div>
         `;
     },
@@ -1124,56 +1021,6 @@ const Pages = {
         </div>
         `;
     },
-
-    // ----- 搜索页 -----
-    search() {
-        const keyword = App.state.searchKeyword || '';
-        const results = App.state.searchResults || [];
-
-        return `
-        <div class="page">
-            <div class="page-header">
-                <div class="page-title">🔍 搜索题目</div>
-                <div class="page-subtitle">输入关键词，搜索教综+中英题库</div>
-            </div>
-
-            <div class="search-box">
-                <input type="text" class="search-input" placeholder="输入关键词搜题..." id="searchInput" value="${keyword.replace(/"/g, '&quot;')}" autocomplete="off">
-                <button class="search-btn" onclick="App.actions.searchQuestions(document.getElementById('searchInput').value)">搜索</button>
-            </div>
-
-            <div class="search-results" id="searchResults">
-                ${keyword === '' ? `
-                    <div class="search-tip">
-                        <div class="search-tip-icon">💡</div>
-                        <div class="search-tip-text">输入关键词开始搜索</div>
-                        <div class="search-tip-desc">支持搜索题干、章节、模块、解析</div>
-                    </div>
-                ` : results.length === 0 ? `
-                    <div class="search-tip">
-                        <div class="search-tip-icon">🔍</div>
-                        <div class="search-tip-text">未找到相关题目</div>
-                        <div class="search-tip-desc">试试其他关键词</div>
-                    </div>
-                ` : `
-                    <div class="search-count">找到 ${results.length} 道相关题目</div>
-                    ${results.map(q => `
-                        <div class="search-result-card" onclick="App.actions.searchQuestionDetail(${q.id}, '${q.module}')">
-                            <div class="search-result-meta">
-                                <span class="tag" style="background:${q.module === '教育学' || q.module === '心理学' || q.module === '师德和教育法律法规与政策' ? 'var(--primary-light)' : 'var(--accent-light)'};color:${q.module === '教育学' || q.module === '心理学' || q.module === '师德和教育法律法规与政策' ? 'var(--primary)' : 'var(--accent-dark)'};">
-                                    ${q.module === '教育学' || q.module === '心理学' || q.module === '师德和教育法律法规与政策' ? '教综' : '中英'}
-                                </span>
-                                ${q.chapter ? `<span class="tag tag-gray">${q.chapter}</span>` : ''}
-                                <span class="tag tag-gray">${App.actions.getTypeName(q.type)}</span>
-                            </div>
-                            <div class="search-result-text">${q.question.substring(0, 120)}${q.question.length > 120 ? '...' : ''}</div>
-                        </div>
-                    `).join('')}
-                `}
-            </div>
-        </div>
-        `;
-    },
 };
 
 // ===== 页面事件绑定 =====
@@ -1192,20 +1039,6 @@ App.events = {
                 }
             };
             updateTimer();
-        }
-    },
-
-    'search'() {
-        const input = document.getElementById('searchInput');
-        if (input) {
-            let timer = null;
-            input.addEventListener('input', () => {
-                clearTimeout(timer);
-                timer = setTimeout(() => {
-                    App.actions.searchQuestions(input.value);
-                }, 300);
-            });
-            input.focus();
         }
     },
 };
