@@ -369,8 +369,39 @@ App.actions = {
     getTodayTodo() {
         const today = App.util.today();
         if (App.state.todoList && App.state.todoList.date === today) return App.state.todoList;
+
         const duration = App.state.todoDuration || 180;
-        App.state.todoList = App.actions.generateTodo(duration);
+        const oldTodo = App.state.todoList;
+
+        // 如果有昨天的未完成任务，先回滚章节复习历史
+        // （教综复习没做完 → 不推进章节，把 pickReviewChapter 刚推的那章退回去）
+        if (oldTodo && oldTodo.tasks) {
+            const jzReviewTask = oldTodo.tasks.find(t => t.type === 'jzReview');
+            if (jzReviewTask && !jzReviewTask.done && App.state.jzReviewHistory && App.state.jzReviewHistory.length > 0) {
+                // 没完成，退回上一章（pop 掉刚推的）
+                App.state.jzReviewHistory.pop();
+            }
+        }
+
+        // 生成今天的新任务
+        const newTodo = App.actions.generateTodo(duration);
+
+        // 把昨天未完成的任务保留到今天（按 type 合并：未完成的覆盖新生成的同类型任务）
+        if (oldTodo && oldTodo.tasks) {
+            const undoneTasks = oldTodo.tasks.filter(t => !t.done);
+            undoneTasks.forEach(undone => {
+                // 找到新任务里同类型的，替换为昨天的未完成任务（保留原 id 和 done=false）
+                const idx = newTodo.tasks.findIndex(t => t.type === undone.type);
+                if (idx >= 0) {
+                    newTodo.tasks[idx] = undone;
+                } else {
+                    // 新任务里没有这个类型，插到最前面
+                    newTodo.tasks.unshift(undone);
+                }
+            });
+        }
+
+        App.state.todoList = newTodo;
         App.storage.save();
         return App.state.todoList;
     },
