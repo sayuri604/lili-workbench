@@ -109,6 +109,22 @@ const App = {
 
         app.innerHTML = content;
 
+        // 给所有页面注入侧边栏（如果该页面还没有）
+        if (!document.getElementById('xhsDrawer')) {
+            app.insertAdjacentHTML('afterbegin', App.util.drawerHTML());
+        }
+
+        // 给非首页注入浮动头像按钮（用于呼出侧边栏）
+        if (App.state.currentPage !== 'home' && !document.getElementById('floatAvatar')) {
+            const userName = App.state.userName || '理理';
+            const fab = document.createElement('button');
+            fab.id = 'floatAvatar';
+            fab.className = 'float-avatar-btn';
+            fab.textContent = userName.charAt(0);
+            fab.onclick = () => App.util.openDrawer();
+            app.appendChild(fab);
+        }
+
         App.bindEvents();
     },
 
@@ -201,6 +217,45 @@ const App = {
         },
 
         showToast(msg) { App.util.toast(msg); },
+
+        // 生成侧边栏 HTML（所有页面共用）
+        drawerHTML() {
+            const userName = App.state.userName || '理理';
+            const page = App.state.currentPage;
+            const isActive = (tab) => {
+                if (tab === 'home' && (page === 'home' || page === 'jz-chapters' || page === 'mock-test' || page === 'mock-result' || page === 'knowledge')) return '';
+                if (tab === page) return 'active';
+                return '';
+            };
+            return `
+            <div class="xhs-drawer" id="xhsDrawer">
+                <div class="xhs-drawer-header">
+                    <div class="xhs-avatar">${userName.charAt(0)}</div>
+                    <div class="xhs-user-name">${userName}</div>
+                    <div class="xhs-user-bio">学习工作台</div>
+                    <button class="xhs-drawer-close" onclick="App.util.closeDrawer()">✕</button>
+                </div>
+                <div class="xhs-drawer-menu">
+                    <div class="xhs-menu-item ${isActive('home')}" onclick="App.util.closeDrawer();App.switchTab('home')">
+                        <span class="xhs-menu-icon">🏠</span><span class="xhs-menu-text">首页</span>
+                    </div>
+                    <div class="xhs-menu-item ${isActive('jiaozong')}" onclick="App.util.closeDrawer();App.switchTab('jiaozong')">
+                        <span class="xhs-menu-icon">📖</span><span class="xhs-menu-text">教综刷题</span>
+                    </div>
+                    <div class="xhs-menu-item ${isActive('english')}" onclick="App.util.closeDrawer();App.switchTab('english')">
+                        <span class="xhs-menu-icon">🅰️</span><span class="xhs-menu-text">中英刷题</span>
+                    </div>
+                    <div class="xhs-menu-item ${isActive('wrong')}" onclick="App.util.closeDrawer();App.switchTab('wrong')">
+                        <span class="xhs-menu-icon">❌</span><span class="xhs-menu-text">错题复习</span>
+                    </div>
+                    <div class="xhs-menu-item" onclick="App.util.toggleUserName()">
+                        <span class="xhs-menu-icon">⚙️</span><span class="xhs-menu-text">设置</span>
+                    </div>
+                </div>
+            </div>
+            <div class="xhs-drawer-mask" id="xhsDrawerMask" onclick="App.util.closeDrawer()"></div>
+            `;
+        },
     },
 };
 
@@ -513,34 +568,6 @@ const Pages = {
         const durationLabels = { 60: '1h', 120: '2h', 180: '3h', 240: '4h', 300: '5h', 360: '6h' };
 
         return `
-        <!-- 左侧抽屉式侧边栏 -->
-        <div class="xhs-drawer" id="xhsDrawer">
-            <div class="xhs-drawer-header">
-                <div class="xhs-avatar">${userName.charAt(0)}</div>
-                <div class="xhs-user-name">${userName}</div>
-                <div class="xhs-user-bio">学习工作台</div>
-                <button class="xhs-drawer-close" onclick="App.util.closeDrawer()">✕</button>
-            </div>
-            <div class="xhs-drawer-menu">
-                <div class="xhs-menu-item active" onclick="App.util.closeDrawer()">
-                    <span class="xhs-menu-icon">🏠</span><span class="xhs-menu-text">首页</span>
-                </div>
-                <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('jiaozong')">
-                    <span class="xhs-menu-icon">📖</span><span class="xhs-menu-text">教综刷题</span>
-                </div>
-                <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('english')">
-                    <span class="xhs-menu-icon">🅰️</span><span class="xhs-menu-text">中英刷题</span>
-                </div>
-                <div class="xhs-menu-item" onclick="App.util.closeDrawer();App.switchTab('wrong')">
-                    <span class="xhs-menu-icon">❌</span><span class="xhs-menu-text">错题复习</span>
-                </div>
-                <div class="xhs-menu-item" onclick="App.util.toggleUserName()">
-                    <span class="xhs-menu-icon">⚙️</span><span class="xhs-menu-text">设置</span>
-                </div>
-            </div>
-        </div>
-        <div class="xhs-drawer-mask" id="xhsDrawerMask" onclick="App.util.closeDrawer()"></div>
-
         <div class="page xhs-page">
             <div class="xhs-top-bar">
                 <button class="xhs-avatar-btn" onclick="App.util.openDrawer()">${userName.charAt(0)}</button>

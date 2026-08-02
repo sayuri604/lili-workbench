@@ -2554,3 +2554,24 @@ mark.highlight {
     color: #333;
     line-height: 1.5;
 }
+
+/* ===== 浮动头像按钮（子页面呼出侧边栏） ===== */
+.float-avatar-btn {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2d4a2b, #4a6741);
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.8);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
