@@ -251,10 +251,24 @@ const App = {
                     <div class="xhs-menu-item" onclick="App.util.toggleUserName()">
                         <span class="xhs-menu-icon">⚙️</span><span class="xhs-menu-text">设置</span>
                     </div>
+                    <div class="xhs-menu-item" onclick="App.util.resetReviewHistory()">
+                        <span class="xhs-menu-icon">🔄</span><span class="xhs-menu-text">重置章节复习</span>
+                    </div>
                 </div>
             </div>
             <div class="xhs-drawer-mask" id="xhsDrawerMask" onclick="App.util.closeDrawer()"></div>
             `;
+        },
+
+        // 重置章节复习历史（从教育学第一章重新开始）
+        resetReviewHistory() {
+            if (!confirm('确定要重置章节复习历史吗？将从教育学第一章重新开始。')) return;
+            App.util.closeDrawer();
+            App.state.jzReviewHistory = [];
+            App.state.todoList = App.actions.generateTodo(App.state.todoDuration || 180);
+            App.storage.save();
+            App.util.toast('✓ 已重置，今日复习从第一章开始');
+            App.render();
         },
     },
 };
@@ -345,8 +359,9 @@ App.actions = {
         const picked = JZ_CHAPTERS[nextIdx];
         if (!App.state.jzReviewHistory) App.state.jzReviewHistory = [];
         App.state.jzReviewHistory.push(picked);
+        // 历史只保留最近5个，超过则重置（确保始终按完整顺序轮换）
         if (App.state.jzReviewHistory.length > 22) {
-            App.state.jzReviewHistory = App.state.jzReviewHistory.slice(-22);
+            App.state.jzReviewHistory = [picked]; // 重置，从当前章节开始
         }
         return picked;
     },
